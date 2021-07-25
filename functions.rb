@@ -28,13 +28,24 @@ def generate_hash(index, fields)
   dict
 end
 
-def store_mongo(hash)
-  client = Mongo::Client.new('mongodb://127.0.0.1:27017/ttest2')
+def store_mongo(index, hash)
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/ttest#{index}")
   collection = client[:estabelecimentos]
-  hash.each do |key, value|
-    collection.insert_one(value)
-  end
+  # hash.each do |key, value|
+  #   collection.insert_one(value)
+  # end
   # collection.find.each do |document|
   #   puts document
   # end
 end
+
+def question_a(index)
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/ttest#{index}")
+  collection = client[:estabelecimentos]
+
+  actives = collection.find( { situacao_cadastral: '02' } ).count.to_f
+  all = collection.count.to_f
+  percentage = actives/all
+  percentage
+end
+

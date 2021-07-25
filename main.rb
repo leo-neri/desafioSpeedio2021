@@ -11,4 +11,6 @@ fields =  ['cnpj_basico', 'cnpj_ordem', 'cnpj_dv', 'identificador matriz/filial'
 ]
 
 hash = generate_hash(index, fields)
-store_mongo(hash)
+store_mongo(index, hash)
+# question_a(index)
+question_b(index)
