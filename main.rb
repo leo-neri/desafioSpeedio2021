@@ -12,5 +12,6 @@ fields =  ['cnpj_basico', 'cnpj_ordem', 'cnpj_dv', 'identificador matriz/filial'
 
 hash = generate_hash(index, fields)
 store_mongo(index, hash)
-question_a(index)
-question_b(index)
+a = question_a(index)
+b = question_b(index)
+export_xlsx(index, a, b)

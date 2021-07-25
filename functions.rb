@@ -2,7 +2,8 @@ require 'open-uri'
 require 'nokogiri'
 require 'csv'
 require 'mongo'
-
+require 'rubygems'
+require 'write_xlsx'
 
 
 def get_download_links
@@ -31,9 +32,9 @@ end
 def store_mongo(index, hash)
   client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttttest#{index}")
   collection = client[:estabelecimentos]
-  hash.each do |key, value|
-    collection.insert_one(value)
-  end
+  # hash.each do |key, value|
+  #   collection.insert_one(value)
+  # end
   # collection.find.each do |document|
   #   puts document
   # end
@@ -68,4 +69,31 @@ def question_b(index)
     dict.store(year, year_restaurants.count.to_f)
   end
   dict
+end
+
+def export_xlsx(index, a, b)
+  # Create a new Excel workbook
+  workbook = WriteXLSX.new("respostas_#{index}.xlsx")
+
+  # Add a worksheet
+  worksheet = workbook.add_worksheet
+
+  # Add and define a format
+  format = workbook.add_format # Add a format
+  format.set_bold
+  format.set_color('red')
+  # format.set_align('center')
+
+  # Write a formatted and unformatted string, row and column notation.
+  # col = row = 0
+  # worksheet.write(row, col, "Hi Excel!", format)
+  # worksheet.write(1,   col, "Hi Excel!")
+
+  # Write a number and a formula using A1 notation
+  worksheet.write('B2', 'A')
+  worksheet.write('B3', 'B')
+  worksheet.write('C2', a, format)
+  worksheet.write('C3', b, format)
+
+  workbook.close
 end
