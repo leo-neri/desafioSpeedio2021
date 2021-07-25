@@ -29,7 +29,7 @@ def generate_hash(index, fields)
 end
 
 def store_mongo(index, hash)
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/ttest#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
   collection = client[:estabelecimentos]
   # hash.each do |key, value|
   #   collection.insert_one(value)
@@ -40,7 +40,7 @@ def store_mongo(index, hash)
 end
 
 def question_a(index)
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/ttest#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
   collection = client[:estabelecimentos]
 
   actives = collection.find( { situacao_cadastral: '02' } ).count.to_f
@@ -49,3 +49,13 @@ def question_a(index)
   percentage
 end
 
+def question_b(index)
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
+  collection = client[:estabelecimentos]
+
+  cnae = collection.find({cnae_fiscal_principal: { '$regex': /^561\d+$/ }})
+  cnae.find.each do |document|
+    puts document
+  end
+
+end
