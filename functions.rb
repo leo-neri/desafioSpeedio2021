@@ -29,33 +29,43 @@ def generate_hash(index, fields)
 end
 
 def store_mongo(index, hash)
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttttest#{index}")
   collection = client[:estabelecimentos]
-  # hash.each do |key, value|
-  #   collection.insert_one(value)
-  # end
+  hash.each do |key, value|
+    collection.insert_one(value)
+  end
   # collection.find.each do |document|
   #   puts document
   # end
 end
 
 def question_a(index)
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttttest#{index}")
   collection = client[:estabelecimentos]
 
   actives = collection.find( { situacao_cadastral: '02' } ).count.to_f
   all = collection.count.to_f
-  percentage = actives/all
-  percentage
+  actives/all
+
 end
 
 def question_b(index)
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttest#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/tttttest#{index}")
   collection = client[:estabelecimentos]
 
-  cnae = collection.find({cnae_fiscal_principal: { '$regex': /^561\d+$/ }})
-  cnae.find.each do |document|
-    puts document
+  years = []
+  restaurants = collection.find({cnae_fiscal_principal: { '$regex': /^561\d+$/ }})
+  restaurants.each do |document|
+    year = document['data_de_inicio_atividade'][0, 4]
+    years.push(year) unless years.include?(year)
+    next
   end
 
+  dict = {}
+
+  years.each do |year|
+    year_restaurants = collection.find({data_de_inicio_atividade: { '$regex': /^#{year}\d+$/ }, cnae_fiscal_principal: { '$regex': /^561\d+$/ }})
+    dict.store(year, year_restaurants.count.to_f)
+  end
+  dict
 end
