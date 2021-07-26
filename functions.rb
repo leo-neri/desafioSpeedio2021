@@ -27,7 +27,10 @@ def generate_hash(index, fields)
   # - liberal_parsing -> The CSV have many abd data occurrences, so we'll take them out
   # - col_sep -> The default separator of CSV tool in Ruby is ",", and our data is separated by ";", so we need to change this
   # - encoding -> The default UTF-8 encoding of Ruby doesn't support Portuguese very well. ISO8859-1 fits better for us.
-  data = CSV.read("data#{index}.csv", liberal_parsing: true,  :col_sep => ";", encoding: "ISO8859-1")
+  # We'll read the CSV with the foreach method and then we'll take the first 10000 rows of the file
+  data = CSV.foreach("data#{index}.csv", liberal_parsing: true,  :col_sep => ";", encoding: "ISO8859-1").take(10000)
+  # You can read also all the CSV with the following command
+  # data = CSV.read("data#{index}.csv", liberal_parsing: true,  :col_sep => ";", encoding: "ISO8859-1")
   # With the CSV reading, we can now create our hash that will be populated.
   dict = {}
   # For each row in CSV, we'll store the row number as a Key and its row as Value
@@ -48,7 +51,7 @@ end
 # The next function will store the Hash data in our local mongodb
 def store_mongo(index, hash)
   # First of all we need to connect do the database
-  client = Mongo::Client.new("mongodb://127.0.0.1:27017/speedioChallenge#{index}")
+  client = Mongo::Client.new("mongodb://127.0.0.1:27017/speedioDevOpsChallenge#{index}")
   # Now we'll go to the collection of Estabelecimentos
   collection = client[:estabelecimentos]
   # For each Value in our Hash, we'll insert it in the database
@@ -68,7 +71,11 @@ def question_a(index)
   # Now we just count all the Estabelecimentos on the collection
   all = collection.count.to_f
   # By the end, we return the percentage
-  actives/all
+  if all != 0 and actives !=0
+    actives/all
+  else
+    0
+  end
 
 end
 

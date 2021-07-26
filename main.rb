@@ -1,4 +1,4 @@
-# Importin local file
+# Importing local file
 require_relative 'functions'
 
 # Database fields
@@ -24,5 +24,5 @@ list.each do |index|
   b = question_b(index)
   puts 'Question B made!'
   export_xlsx(index, a, b)
-  puts "Data exported!\n"
+  puts "Data #{index} exported!\n"
 end
