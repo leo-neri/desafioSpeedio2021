@@ -26,3 +26,6 @@ Ler os dados do db e obter as seguintes informações:
 
 
 Exportar os dados do ponto 4 para um CSV (BONUS POINTS: exportar para formato excel)
+
+# Resultado
+** Aprovado! 😃😃
